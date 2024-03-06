@@ -15,14 +15,14 @@
           <!-- ========== End:: Modal Header ========== -->
 
           <!-- ========== Start:: Select Address form ========== -->
-          <AddressCard
+          <!-- <AddressCard
             v-for="item in dummyAddresses"
             :key="item.id"
             :addressData="item"
             :isActive="addressIsActive(item)"
             :actionsAvailable="false"
             @selectIAddress="setSelectedAddressValue"
-          />
+          /> -->
           <!-- ========== End:: Select Address form ========== -->
 
           <!-- ========== Start:: Modal Footer ========== -->
@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import AddressCard from "@/components/ui/cards/AddressCard.vue";
+// import AddressCard from "@/components/ui/cards/AddressCard.vue";
 
 export default {
   name: "SelectAddressModal",
@@ -66,9 +66,9 @@ export default {
     },
   },
 
-  components: {
-    AddressCard,
-  },
+  // components: {
+  //   AddressCard,
+  // },
 
   data() {
     return {

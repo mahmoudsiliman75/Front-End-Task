@@ -1,12 +1,12 @@
 <template>
   <div class="main_loader_wrapper">
-    <img
+    <!-- <img
       class="logo"
       src="@/assets/media/logo/logo.svg"
       width="160"
       height="160"
       alt="Logo"
-    />
+    /> -->
   </div>
 </template>
 
