@@ -1,6 +1,8 @@
 <template>
   <section class="wizard_form_content_wrapper">
     <div class="container" v-if="!requestIsCompleted">
+      <h2> LANGUAGE SWITCHER </h2>
+
       <!-- ========== Start:: Wizard Form ========== -->
       <div class="company_forms_wrapper">
         <div class="row justify-content-between">

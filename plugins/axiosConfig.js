@@ -9,8 +9,9 @@ export default ({ app, $axios, store, redirect, $cookies }, inject) => {
         Accept: 'application/json',
       },
     },
-  }),
+  })
 
+  axiosRequest.setToken(app.$cookies.get('task_user_token') || '', 'Bearer')
   axiosRequest.setHeader('Accept-Language', app.i18n.locale)
   axiosRequest.setHeader('lang', app.i18n.locale)
 
@@ -30,6 +31,7 @@ export default ({ app, $axios, store, redirect, $cookies }, inject) => {
       $cookies.removeAll();
       store.commit('auth/resetState');
       window.location.reload();
+      // app.router.replace(app.localPath('/auth/login'));
     }
   })
 

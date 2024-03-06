@@ -27,7 +27,7 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
-    '@/plugins/axiosConfig.js',
+    // '@/plugins/axiosConfig.js',
     '@/plugins/i18n.client.js',
     '@/plugins/vuetify.js',
     '@/plugins/fontAwesome.js',
