@@ -176,6 +176,9 @@ export default {
   .language_switcher_wrapper {
     position: absolute;
     top: 5%;
+    @include media(md) {
+      top: 1%;
+    }
   }
 
   .forms_wrapper {
