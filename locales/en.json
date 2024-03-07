@@ -6,22 +6,19 @@
     "Modals": {
       "sentSuccessfully": "Sent Successfully"
     },
-    "CompaniesAndCampaignsForms": {
-      "title": "Advertise your company easily with Nemrh",
-      "addCompanyTitle": "Add your company easily with Nemrh",
-      "desc": "Any questions or comments? Just write us a message!",
-      "campaignDetailsStep": "If you subscribe to a major package, fill in the features to be displayed",
-      "selectPackageStep": "Select Package",
-      "contactInfo": "Contact Information",
-      "companyIdentity": "Company Identity",
+    "WizardForms": {
+      "register": "Register",
+      "basicInformation": "Basic Information",
+      "locationInformation": "Location Information",
       "requestSent": "Yor request ent successfully, we will contact you soon"
     }
   },
 
   "BUTTONS": {
     "next": "Next",
-    "send": "Send",
-    "previous": "Previous"
+    "submit": "Send",
+    "previous": "Previous",
+    "ok": "Ok"
   },
 
   "FORMS": {
@@ -30,26 +27,38 @@
       "email": "Email",
       "phone": "Phone Number",
       "nationalId": "National ID",
+      "nationalIdNumber": "National ID Number",
       "password": "Password",
       "confirmPassword": "Confirm Password",
       "personalImage": "Personal Image",
       "country": "Country",
       "state": "State",
-      "city": "city"
+      "city": "City",
+      "address": "Address"
     },
     "Validation": {
       "name": "Name Field Can't Be Empty",
+      "nameMinLength": "Name Can't Be Less Than 3 Characters",
+      "nameMaxLength": "Name Can't Be More Than 256 Characters",
       "email": "Email Field Can't Be Empty",
       "invalidEmail": "Please Enter Valid Email Format",
       "phone": "Phone Number Field Can't Be Empty",
-      "phoneStartWith966": "Phone Number Must Start With 966",
-      "phoneLength": "Phone Number Must Be 12 Digits",
+      "phoneMinLength": "Phone Can't Be Less Than 9 Numbers",
+      "phoneMaxLength": "Phone Can't Be More Than 15 Numbers",
+      "natIdAttachment": "National Id Attachment Field Can't Be Empty",
+      "natIdStartWith1or2": "National Id Number Must Start With 1 Or 2",
+      "natIdLength": "National Id Number Must Be 10 Numbers",
+      "personalImage": "Personal Image Field Can't Be Empty",
       "password": "Password Input Is Required",
-      "passwordLength": "Password Must Be At Least 6 Digits",
+      "passwordLength": "Password Must Be At Least 8 Digits",
       "confirmPassword": "Confirm Password Input Is Required",
-      "confirmPasswordLength": "Confirm Password Must Be At Least 6 Digits",
+      "confirmPasswordLength": "Confirm Password Must Be At Least 8 Digits",
       "passwordsMatching": "The Passwords Does Not Match",
-      "passwordCustomRules": "Password Must Contain At Least Lowercase Letter, One Uppercase Letter, A Special Character And One number"
+      "notValidPassword": "Password Must Contain At Least Lowercase Letter, One Uppercase Letter, A Special Character And A Length Of 8 Digits",
+      "country": "Country Input Is Required",
+      "state": "State Input Is Required",
+      "city": "City Input Is Required",
+      "address": "Address Input Is Required"
     }
   },
 

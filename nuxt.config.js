@@ -31,6 +31,7 @@ export default {
     '@/plugins/i18n.client.js',
     '@/plugins/vuetify.js',
     '@/plugins/fontAwesome.js',
+    '@/plugins/vueCountryCode.js',
     '@/plugins/main.js',
   ],
 

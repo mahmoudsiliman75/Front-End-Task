@@ -2,99 +2,130 @@
   <section class="company_details_form_step_wrapper">
     <div class="step_title_wrapper">
       <span class="step_number"> 1 </span>
-      <h2 class="step_title"> {{ $t("TITLES.CompaniesAndCampaignsForms.companyDetails") }} </h2>
+      <h2 class="step_title"> {{ $t("TITLES.WizardForms.basicInformation") }} </h2>
     </div>
 
     <v-form
       class="w-100 mt-8"
-      ref="companyDetailsForm"
+      ref="basicInformationForm"
       v-model="formIsValid"
       lazy-validation
     >
       <div class="row">
-        <!-- Start:: Company Name Input -->
+        <!-- Start:: Name Input -->
         <base-input
           col="6"
           type="text"
-          :placeholder="$t('FORMS.Placeholders.companyNameAr') + '*'"
+          :placeholder="$t('FORMS.Placeholders.name') + '*'"
           :validationRules="validationSchema.nameRules"
-          :serverSideErrorMessage="data.nameAr.error"
-          @clearServerSideErrorMessage="data.nameAr.error = null"
-          v-model.trim="data.nameAr.value"
+          :serverSideErrorMessage="data.name.error"
+          @clearServerSideErrorMessage="data.name.error = null"
+          v-model.trim="data.name.value"
           required
         />
-        <base-input
-          col="6"
-          type="text"
-          :placeholder="$t('FORMS.Placeholders.companyNameEn') + '*'"
-          :validationRules="validationSchema.nameRules"
-          :serverSideErrorMessage="data.nameEn.error"
-          @clearServerSideErrorMessage="data.nameEn.error = null"
-          v-model.trim="data.nameEn.value"
-          required
-        />
-        <!-- End:: Company Name Input -->
+        <!-- End:: Name Input -->
 
-        <!-- Start:: Company Service Input -->
-        <base-input
-          col="6"
-          type="text"
-          :placeholder="$t('FORMS.Placeholders.companyServiceAr') + '*'"
-          :validationRules="validationSchema.serviceRules"
-          :serverSideErrorMessage="data.serviceAr.error"
-          @clearServerSideErrorMessage="data.serviceAr.error = null"
-          v-model.trim="data.serviceAr.value"
-          required
-        />
-        <base-input
-          col="6"
-          type="text"
-          :placeholder="$t('FORMS.Placeholders.companyServiceEn') + '*'"
-          :validationRules="validationSchema.serviceRules"
-          :serverSideErrorMessage="data.serviceEn.error"
-          @clearServerSideErrorMessage="data.serviceEn.error = null"
-          v-model.trim="data.serviceEn.value"
-          required
-        />
-        <!-- End:: Company Service Input -->
+        <!-- Start:: Phone Input -->
+        <div class="col-md-6 d-flex justify-start align-start gap-2">
+          <client-only>
+            <vue-country-code
+              ref="vcc"
+              @onSelect="onSelectPhoneCode"
+            />
+          </client-only>
+  
+          <base-input
+            class="w-100"
+            type="tel"
+            :placeholder="$t('FORMS.Placeholders.phone') + '*'"
+            :validationRules="validationSchema.phoneRules"
+            :serverSideErrorMessage="data.phone.error"
+            @clearServerSideErrorMessage="data.phone.error = null"
+            v-model.trim="data.phone.value"
+            required
+          />
+        </div>
+        <!-- End:: Phone Input -->
 
-        <!-- Start:: Work Field Input -->
-        <base-select-input
-          v-if="categories.length > 0"
-          static
-          :staticItems="categories"
-          :placeholder="$t('FORMS.Placeholders.workField') + '*'"
-          :validationRules="validationSchema.workFieldRules"
-          :serverSideErrorMessage="data.workField.error"
-          @clearServerSideErrorMessage="data.workField.error = null"
-          v-model="data.workField.value"
-        />
-        <!-- End:: Work Field Input -->
+        <!-- Start:: Email Input -->
+        <base-input
+          col="6"
+          type="email"
+          :placeholder="$t('FORMS.Placeholders.email') + '*'"
+          :validationRules="validationSchema.emailRules"
+          :serverSideErrorMessage="data.email.error"
+          @clearServerSideErrorMessage="data.email.error = null"
+          v-model.trim="data.email.value"
+          required
+        />      
+        <!-- End:: Email Input -->
 
-        <!-- Start:: About Company Input -->
-        <base-input
+        <!-- Start:: National Id Attachment Input -->
+        <base-document-upload-input
           col="6"
-          type="textarea"
-          rows="6"
-          :placeholder="$t('FORMS.Placeholders.aboutCompanyAr') + '*'"
-          :validationRules="validationSchema.aboutCompanyRules"
-          :serverSideErrorMessage="data.aboutCompanyAr.error"
-          @clearServerSideErrorMessage="data.aboutCompanyAr.error = null"
-          v-model.trim="data.aboutCompanyAr.value"
+          class="mb-8"
+          identifier="nat_id_mage"
+          :placeholder="$t('FORMS.Placeholders.nationalId') + '*'"
+          accept="image/*"
+          @selectDocument="selectDocument"
+          @clearErrors="data.natIdImage.error = null"
+          :errorMessage="data.natIdImage.error"
           required
         />
+        <!-- End:: National Id Attachment Input -->
+
+        <!-- Start:: National Id Number Input -->
         <base-input
           col="6"
-          type="textarea"
-          rows="6"
-          :placeholder="$t('FORMS.Placeholders.aboutCompanyEn') + '*'"
-          :validationRules="validationSchema.aboutCompanyRules"
-          :serverSideErrorMessage="data.aboutCompanyEn.error"
-          @clearServerSideErrorMessage="data.aboutCompanyEn.error = null"
-          v-model.trim="data.aboutCompanyEn.value"
+          type="number"
+          :placeholder="$t('FORMS.Placeholders.nationalIdNumber')"
+          :validationRules="validationSchema.natIdRules"
+          :serverSideErrorMessage="data.natIdNumber.error"
+          @clearServerSideErrorMessage="data.natIdNumber.error = null"
+          v-model.trim="data.natIdNumber.value"
           required
         />
-        <!-- End:: About Company Input -->
+        <!-- End:: National Id Number Input -->
+
+        <!-- Start:: Personal Image Input -->
+        <base-document-upload-input
+          col="6"
+          class="mb-8"
+          identifier="personal_image"
+          :placeholder="$t('FORMS.Placeholders.personalImage') + '*'"
+          accept="image/*"
+          @selectDocument="selectDocument"
+          @clearErrors="data.personalImage.error = null"
+          :errorMessage="data.personalImage.error"
+          required
+        />
+        <!-- End:: Personal Image Input -->
+
+        <!-- Start:: Password Input -->
+        <base-input
+          col="6"
+          type="password"
+          :placeholder="$t('FORMS.Placeholders.password')+'*'"
+          :validationRules="validationSchema.passwordRules"
+          :serverSideErrorMessage="data.password.error"
+          @clearServerSideErrorMessage="data.password.error = null"
+          v-model.trim="data.password.value"
+          required
+        />
+        <!-- End:: Password Input -->
+
+        <!-- Start:: Confirm Password Input -->
+        <base-input
+          col="6"
+          type="password"
+          :placeholder="$t('FORMS.Placeholders.confirmPassword')+'*'"
+          :validationRules="validationSchema.confirmPasswordRules"
+          :serverSideErrorMessage="data.confirmPassword.error"
+          @clearServerSideErrorMessage="data.confirmPassword.error = null"
+          v-model.trim="data.confirmPassword.value"
+          required
+        />
+        <!-- End:: Confirm Password Input -->
       </div>
     </v-form>
 
@@ -110,44 +141,51 @@
 </template>
 
 <script>
+  import isValidEmail from '@/utils/isValidEmail';
+  import isValidPassword from '@/utils/isValidPassword';
+
   export default {
-    name: 'CompanyDetailsStep',
+    name: 'firstStep',
 
     emits: ['fireNavigateToSecondStep'],
 
     data() {
       return {
-        // Start::Categories Data
-        categories: [],
-        // End::Categories Data
-
         // Start:: Company Details Data
         data: {
-          nameAr: {
+          name: {
             value: null,
             error: null,
           },
-          nameEn: {
+          email: {
             value: null,
             error: null,
           },
-          serviceAr: {
+          phoneCode: {
             value: null,
             error: null,
           },
-          serviceEn: {
+          phone: {
             value: null,
             error: null,
           },
-          workField: {
+          natIdImage: {
             value: null,
             error: null,
           },
-          aboutCompanyAr: {
+          natIdNumber: {
             value: null,
             error: null,
           },
-          aboutCompanyEn: {
+          personalImage: {
+            value: null,
+            error: null,
+          },
+          password: {
+            value: null,
+            error: null,
+          },
+          confirmPassword: {
             value: null,
             error: null,
           },
@@ -157,65 +195,93 @@
         // Start:: Validation Schema
         formIsValid: true,
         validationSchema: {
-          nameRules: [(val) => !!val || this.$t('FORMS.Validation.name')],
-          serviceRules: [(val) => !!val || this.$t('FORMS.Validation.service')],
-          workFieldRules: [(val) => !!val || this.$t('FORMS.Validation.workField')],
-          aboutCompanyRules: [(val) => !!val || this.$t('FORMS.Validation.aboutCompany')],
+          nameRules: [
+            val => !!val || this.$t('FORMS.Validation.name'),
+            val => !(val && val.length < 3) || this.$t('FORMS.Validation.nameMinLength'),
+            val => !(val && val.length > 256) || this.$t('FORMS.Validation.nameMaxLength'),
+          ],
+          emailRules: [
+            (val) => !!val || this.$t('FORMS.Validation.email'),
+            (val) =>
+              (val && !!isValidEmail(val)) ||
+              this.$t('FORMS.Validation.invalidEmail'),
+          ],
+          phoneRules: [
+            val => !!val || this.$t('FORMS.Validation.phone'),
+            val => !(val && val.length < 9) || this.$t('FORMS.Validation.phoneMinLength'),
+            val => !(val && val.length > 15) || this.$t('FORMS.Validation.phoneMaxLength'),
+          ],
+          natIdRules: [
+            val => !(val && !(val.startsWith("1") || val.startsWith("2")) ) || this.$t('FORMS.Validation.natIdStartWith1or2'),
+            val => !(val && val.length !== 10) || this.$t('FORMS.Validation.natIdLength'),
+          ],
+          passwordRules: [
+            val => !!val || this.$t('FORMS.Validation.password'),
+            val => (val && !!isValidPassword(val)) || this.$t('FORMS.Validation.notValidPassword'),
+          ],
+          confirmPasswordRules: [
+            val => !!val || this.$t('FORMS.Validation.confirmPassword'),
+            val => (val && !!isValidPassword(val)) || this.$t('FORMS.Validation.notValidPassword'),
+            val => val === this.data.password.value || this.$t('FORMS.Validation.passwordsMatching'),
+          ],
         },
         // End:: Validation Schema
       }
     },
 
     methods: {
-      // Start:: Get Categories
-      async getCategories() {
-        try {
-          // ********** Start:: Implement Request ********** //
-          let res = await this.$axiosRequest({
-            method: 'GET',
-            url: 'categories',
-          })
-          // ********** End:: Implement Request ********** //
-          this.categories = res.data.data.map(item => {
-            return {
-              id: item.id,
-              name: item.title,
-            }
-          });
-        } catch (err) {
-          console.log(err.response.data.message)
+      // Start:: Handel Phone Code Selection
+      onSelectPhoneCode({name, iso2, dialCode}) {
+        this.data.phoneCode.value = dialCode;
+        // console.log("onSelectPhoneCode =>", name, iso2, dialCode);
+      },
+      // End:: Handel Phone Code Selection
+
+      // Start:: Select Upload Document
+      selectDocument(selectedDocument) {
+        if(selectedDocument.identifier === "nat_id_mage") {
+          this.formIsValid = true;
+          this.data.natIdImage.value = selectedDocument;
+        } else if(selectedDocument.identifier === "personal_image") {
+          this.formIsValid = true;
+          this.data.personalImage.value = selectedDocument;
         }
       },
-      // End:: Get Categories
+      // End:: Select Upload Document
 
       // Start:: Pass Selected Package Data To Parent Component
       async navigateToSecondStep() {
-        await this.$refs.companyDetailsForm.validate(); 
-
-        if (this.formIsValid){
-          this.$emit("fireNavigateToSecondStep", {
-            nameAr: this.data.nameAr.value,
-            nameEn: this.data.nameEn.value,
-            serviceAr: this.data.serviceAr.value,
-            serviceEn: this.data.serviceEn.value,
-            workField: this.data.workField.value,
-            aboutCompanyAr: this.data.aboutCompanyAr.value,
-            aboutCompanyEn: this.data.aboutCompanyEn.value,
-          });
+        if (!this.data.natIdImage.value) {
+          this.data.natIdImage.error = this.$t('FORMS.Validation.natIdAttachment');
+          this.formIsValid = false;
+          return
+        } else if (!this.data.personalImage.value) {
+          this.data.personalImage.error = this.$t('FORMS.Validation.personalImage');
+          this.formIsValid = false;
+          return
+        } else {
+          await this.$refs.basicInformationForm.validate(); 
+  
+          if (this.formIsValid){
+            this.$emit("fireNavigateToSecondStep", {
+              name: this.data.name.value,
+              email: this.data.email.value,
+              phone: this.data.phone.value,
+              natIdImage: this.data.natIdImage.value,
+              natIdNumber: this.data.natIdNumber.value,
+              personalImage: this.data.personalImage.value,
+              password: this.data.password.value,
+              confirmPassword: this.data.confirmPassword.value,
+            });
+          }
         }
       },
       // End:: Pass Selected Package Data To Parent Component
     },
-
-    created() {
-      // Start:: Fire Methods
-      this.getCategories();
-      // End:: Fire Methods
-    },
   }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .company_details_form_step_wrapper {
   .step_title_wrapper {
     margin-block: 1rem;
@@ -237,6 +303,18 @@
       font-size: 1rem;  
       font-family: $bold_font;
       line-height: 1.8;
+    }
+  }
+
+  .vue-country-select {
+    border: none;
+    outline: none;
+    box-shadow: none;
+    padding-block: 2px;
+    background-color: var(--theme_inputs_bg);
+    .dropdown-list {
+      width: fit-content !important;
+      overflow-x: hidden !important;
     }
   }
 

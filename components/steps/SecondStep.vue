@@ -1,141 +1,99 @@
 <template>
-  <section class="company_contact_info_form_step_wrapper">
+  <section class="company_identity_form_step_wrapper">
     <div class="step_title_wrapper">
       <span class="step_number"> 2 </span>
-      <h2 class="step_title"> {{ $t("TITLES.CompaniesAndCampaignsForms.contactInfo") }} </h2>
+      <h2 class="step_title"> {{ $t("TITLES.WizardForms.locationInformation") }} </h2>
     </div>
 
     <v-form
-      class="w-100 mt-10"
-      ref="companyContactInfoForm"
+      class="w-100 mt-8"
+      ref="locationForm"
       v-model="formIsValid"
       lazy-validation
     >
       <div class="row">
-        <!-- Start:: Phone Input -->
+        <!-- Start:: Countries Input -->
+        <base-select-input
+          col="4"
+          static
+          :staticItems="countries"
+          :placeholder="$t('FORMS.Placeholders.country') + '*'"
+          :validationRules="validationSchema.countryRules"
+          :serverSideErrorMessage="data.country.error"
+          @clearServerSideErrorMessage="data.country.error = null"
+          v-model="data.country.value"
+        />
+        <!-- End:: Countries Input -->
+
+        <!-- Start:: States Input -->
         <base-input
-          type="tel"
-          :placeholder="$t('FORMS.Placeholders.whatsAppNumber') + '*'"
-          staticPlaceholder="966xxxxxxxx"
-          :validationRules="validationSchema.phoneRules"
-          :serverSideErrorMessage="data.phone.error"
-          @clearServerSideErrorMessage="data.phone.error = null"
-          v-model.trim="data.phone.value"
+          v-if="data.state.value && data.state.value.id === 'other_state'"
+          col="4"
+          type="text"
+          :placeholder="$t('FORMS.Placeholders.state') + '*'"
+          :validationRules="validationSchema.stateRules"
+          :serverSideErrorMessage="data.otherState.error"
+          @clearServerSideErrorMessage="data.otherState.error = null"
+          v-model="data.otherState.value"
+          :disabled="!data.country.value"
           required
         />
-        <!-- End:: Phone Input -->
 
-        <!-- Start:: Email Input -->
+        <base-select-input
+          v-else
+          col="4" 
+          static
+          :staticItems="states"
+          :placeholder="$t('FORMS.Placeholders.state') + '*'"
+          :validationRules="validationSchema.stateRules"
+          :serverSideErrorMessage="data.state.error"
+          @clearServerSideErrorMessage="data.state.error = null"
+          v-model="data.state.value"
+          :disabled="!data.country.value"
+        />
+        <!-- End:: States Input -->
+  
+        <!-- Start:: Cities Input -->
         <base-input
-          type="email"
-          :placeholder="$t('FORMS.Placeholders.email') + '*'"
-          :validationRules="validationSchema.emailRules"
-          :serverSideErrorMessage="data.email.error"
-          @clearServerSideErrorMessage="data.email.error = null"
-          v-model.trim="data.email.value"
-          required
-        />      
-        <!-- End:: Email Input -->
-
-        <!-- Start:: Website Input -->
-        <base-input
+          v-if="data.city.value && data.city.value.id === 'other_city'"
+          col="4"
           type="text"
-          :placeholder="$t('FORMS.Placeholders.website') + '*'"
-          :validationRules="validationSchema.websiteRules"
-          :serverSideErrorMessage="data.website.error"
-          @clearServerSideErrorMessage="data.website.error = null"
-          v-model.trim="data.website.value"
+          :placeholder="$t('FORMS.Placeholders.state') + '*'"
+          :validationRules="validationSchema.stateRules"
+          :serverSideErrorMessage="data.otherCity.error"
+          @clearServerSideErrorMessage="data.otherCity.error = null"
+          v-model="data.otherCity.value"
+          :disabled="!data.country.value"
           required
-        />      
-        <!-- End:: Website Input -->
+        />
 
-        <!-- Start:: Social Links Inputs Repeater -->
-        <div
-          class="form_repeater co-12"
-          v-for="(item, index) in data.socialLinks"
-          :key="item.id"
-        >
-          <div class="row">
-            <!-- ******** Start:: Social Link Input ******** -->
-            <base-select-input
-              v-if="socialPlatforms.length > 0"
-              col="5"
-              static
-              :staticItems="socialPlatforms"
-              :placeholder="$t('FORMS.Placeholders.socialPlatform') + '*'"
-              :validationRules="validationSchema.platformRules"
-              :serverSideErrorMessage="item.platform.error"
-              @clearServerSideErrorMessage="item.platform.error = null"
-              v-model="item.platform.value"
-            />
-            <!-- ******** End:: Social Link Input ******** -->
-
-            <!-- ******** Start:: Social Link Input ******** -->
-            <base-input
-              col="5"
-              type="text"
-              :placeholder="$t('FORMS.Placeholders.link') + '*'"
-              :validationRules="validationSchema.linkRules"
-              :serverSideErrorMessage="item.link.error"
-              @clearServerSideErrorMessage="item.link.error = null"
-              v-model.trim="item.link.value"
-              required
-            />
-            <!-- ******** End:: Social Link Input ******** -->
-
-            <!-- ******** Start:: Input Repeater Buttons ******** -->
-            <div class="col-lg-2 form_repeater_btns_wrapper">
-              <button
-                v-show="
-                  (data.socialLinks.length === 1 || index === data.socialLinks.length - 1) &&
-                  data.socialLinks.length < socialPlatforms.length
-                "
-                type="button"
-                class="add_btn"
-                @click="appendFormRepeaterItem"
-              >
-                <i class="fa-solid fa-plus"></i>
-              </button>
-              <button
-                v-show="data.socialLinks.length > 1"
-                type="button"
-                class="delete_btn"
-                @click="removeFormRepeaterItem(item)"
-              >
-                <i class="fa-regular fa-trash-can"></i>
-              </button>
-            </div>
-            <!-- ******** End:: Input Repeater Buttons ******** -->
-          </div>
-        </div>
-        <!-- End:: Social Links Inputs Repeater -->
-
-        <!-- Start:: Address Input -->
-        <base-input
-          col="6"
-          type="text"
-          :placeholder="$t('FORMS.Placeholders.companyAddressAr') + '*'"
+        <base-select-input
+          v-else
+          col="4"
+          static
+          :staticItems="cities"
+          :placeholder="$t('FORMS.Placeholders.city') + '*'"
+          :validationRules="validationSchema.cityRules"
+          :serverSideErrorMessage="data.city.error"
+          @clearServerSideErrorMessage="data.city.error = null"
+          v-model="data.city.value"
+          :disabled="!data.country.value || !data.state.value"
+        />
+        <!-- End:: Cities Input -->
+  
+        <!-- Start:: Map Input -->
+        <map-location-input
+          :placeholder="$t('FORMS.Placeholders.address')+'*'"
           :validationRules="validationSchema.addressRules"
-          :serverSideErrorMessage="data.addressAr.error"
-          @clearServerSideErrorMessage="data.addressAr.error = null"
-          v-model.trim="data.addressAr.value"
+          :serverSideErrorMessage="data.address.error"
+          @selectLocation="setSelectedCoordinates"
           required
         />
-        <base-input
-          col="6"
-          type="text"
-          :placeholder="$t('FORMS.Placeholders.companyAddressEn') + '*'"
-          :validationRules="validationSchema.addressRules"
-          :serverSideErrorMessage="data.addressEn.error"
-          @clearServerSideErrorMessage="data.addressEn.error = null"
-          v-model.trim="data.addressEn.value"
-          required
-        />
-        <!-- End:: Address Input -->
+        <!-- End:: Map Input -->
       </div>
     </v-form>
 
-    <div class="form_btns_wrapper">
+    <div class="btns_wrapper">
       <base-button
         :btnText="$t('BUTTONS.previous')"
         styleType="text_btn"
@@ -143,167 +101,149 @@
       />
 
       <base-button
-        :btnText="$t('BUTTONS.next')"
+        :btnText="$t('BUTTONS.submit')"
         styleType="primary_btn"
-        @fireClick="navigateToThirdStep"
-        :disabled="!formIsValid"
+        @fireClick="submitForm"
+        :isLoading="isWaitingApiResponse"
+        :disabled="isWaitingApiResponse || !formIsValid"
       />
     </div>
   </section>
 </template>
 
 <script>
-import isValidEmail from '@/utils/isValidEmail';
+  export default {
+    name: 'SecondStep',
 
-export default {
-  name: "CompanyContactInfoStep",
+    emits: ['fireNavigateToPreviousStep', 'submitForm'],
 
-  emits: ['fireNavigateToPreviousStep', 'fireNavigateToThirdStep'],
+    props: {
+      isWaitingApiResponse: {
+        type: Boolean,
+        required: true,
+        default: true,
+      },
+    },
 
-  data() {
-    return {
-      // Start:: Loading Handling Data
-      isWaitingApiResponse: false,
-      // End:: Loading Handling Data
-
-      // Start:: Social Platforms Data
-      socialPlatforms: [],
-      // End:: Social Platforms Data
-
-      // Start:: Data Collection To Send
-      data: {
-        phone: {
-          value: null,
-          error: null,
-        },
-        email: {
-          value: null,
-          error: null,
-        },
-        website: {
-          value: null,
-          error: null,
-        },
-        socialLinks: [
+    data() {
+      return {
+        // Start::Categories Data
+        countries: [
           {
             id: 1,
-            platform: {
-              value: null,
-              error: null,
-            },
-            link: {
-              value: null,
-              error: null,
-            },
-          }
+            name: 'Country 1'
+          },
+          {
+            id: 2,
+            name: 'Country 2'
+          },
         ],
-        addressAr: {
-          value: null,
-          error: null,
-        },
-        addressEn: {
-          value: null,
-          error: null,
-        },
-      },
-      // End:: Data Collection To Send
+        states: [
+          {
+            id: 1,
+            name: 'State 1'
+          },
+          {
+            id: 2,
+            name: 'State 2'
+          },
+          {
+            id: 'other_state',
+            name: 'Other State'
+          },
+        ],
+        cities: [
+          {
+            id: 1,
+            name: 'City 1'
+          },
+          {
+            id: 2,
+            name: 'City 2'
+          },
+          {
+            id: 'other_city',
+            name: 'Other City'
+          },
+        ],
+        // End::Categories Data
 
-      // Start:: Validation Schema
-      formIsValid: true,
-      validationSchema: {
-        phoneRules: [
-          val => !!val || this.$t('FORMS.Validation.phone'),
-          val => !(val && !val.startsWith("966")) || this.$t('FORMS.Validation.phoneStartWith966'),
-          val => !(val && val.length !== 12) || this.$t('FORMS.Validation.phoneLength'),
-        ],
-        emailRules: [
-          (val) => !!val || this.$t('FORMS.Validation.email'),
-          (val) =>
-            (val && !!isValidEmail(val)) ||
-            this.$t('FORMS.Validation.invalidEmail'),
-        ],
-        websiteRules: [(val) => !!val || this.$t('FORMS.Validation.website')],
-        platformRules: [(val) => !!val || this.$t('FORMS.Validation.socialPlatform')],
-        linkRules: [(val) => !!val || this.$t('FORMS.Validation.link')],
-        addressRules: [(val) => !!val || this.$t('FORMS.Validation.address')],
-      },
-      // End:: Validation Schema
-    }
-  },
+        // Start:: Company Details Data
+        data: {
+          country: {
+            value: null,
+            error: null,
+          },
+          state: {
+            value: null,
+            error: null,
+          },
+          otherState: {
+            value: null,
+            error: null,
+          },
+          city: {
+            value: null,
+            error: null,
+          },
+          otherCity: {
+            value: null,
+            error: null,
+          },
+          address: {
+            value: null,
+            error: null,
+          },
+        },
+        // End:: Company Details Data
 
-  methods: {
-    // Start:: Get Social Platforms
-    async getSocialPlatforms() {
-      try {
-        // ********** Start:: Implement Request ********** //
-        let res = await this.$axiosRequest({
-          method: 'GET',
-          url: 'socials',
-        })
-        // ********** End:: Implement Request ********** //
-        this.socialPlatforms = res.data.data.map(item => {
-          return {
-            id: item.id,
-            name: item.title,
-          }
-        });
-      } catch (err) {
-        console.log(err.response.data.message);
+        // Start:: Validation Schema
+        formIsValid: true,
+        validationSchema: {
+          countryRules: [
+            val => !!val || this.$t('FORMS.Validation.country'),
+          ],
+          stateRules: [
+            val => !!val || this.$t('FORMS.Validation.state'),
+          ],
+          cityRules: [
+            val => !!val || this.$t('FORMS.Validation.city'),
+          ],
+          addressRules: [(val) => !!val || this.$t('FORMS.Validation.address')],
+        },
+        // End:: Validation Schema
       }
     },
-    // End:: Get Social Platforms
 
-    // Start:: Pass Selected Package Data To Parent Component
-    async navigateToThirdStep() {
-      await this.$refs.companyContactInfoForm.validate(); 
+    methods: {
+      // Start:: Set Selected Map Coordinates
+      async setSelectedCoordinates(selectedData) {
+        this.data.address.value = selectedData;
+      },
+      // End:: Set Selected Map Coordinates
 
-      if (this.formIsValid){
-        this.$emit("fireNavigateToThirdStep", {
-          phone: this.data.phone.value,
-          email: this.data.email.value,
-          website: this.data.website.value,
-          socialLinks: this.data.socialLinks.map(item => ({
-            id: item.id,
-            platform: item.platform.value,
-            link: item.link.value,
-          })),
-          addressAr: this.data.addressAr.value,
-          addressEn: this.data.addressEn.value,
-        });
-      }
+      // Start:: Pass Selected Package Data To Parent Component
+      async submitForm() {
+        await this.$refs.locationForm.validate(); 
+
+        if (this.formIsValid){
+          this.$emit("submitForm", {
+            country: this.data.country.value,
+            state: this.data.state.value,
+            otherState: this.data.otherState.value,
+            city: this.data.city.value,
+            otherCity: this.data.otherCity.value,
+            address: this.data.address.value,
+          });
+        }
+      },
+      // End:: Pass Selected Package Data To Parent Component
     },
-    // End:: Pass Selected Package Data To Parent Component
-
-    // Start:: Handel Form Repeater Actions
-    appendFormRepeaterItem() {
-      this.data.socialLinks.push({
-        id: Math.random().toString(36).substring(2) + (new Date()).getTime().toString(36),
-        platform: {
-          value: null,
-          error: null,
-        },
-        link: {
-          value: null,
-          error: null,
-        },
-      });
-    },
-    removeFormRepeaterItem(itemToRemove) {
-      this.data.socialLinks = this.data.socialLinks.filter(item => item.id !== itemToRemove.id);
-    },
-    // End:: Handel Form Repeater Actions
-  },
-
-  created() {
-    // Start:: Fire Methods
-    this.getSocialPlatforms();
-    // End:: Fire Methods
-  },
-}
+  }
 </script>
 
 <style lang="scss" scoped>
-.company_contact_info_form_step_wrapper {
+.company_identity_form_step_wrapper {
   .step_title_wrapper {
     margin-block: 1rem;
     @include flex(flex-start, center);
@@ -317,7 +257,7 @@ export default {
       font-size: 0.8rem;
       color: var(--white);
     }
-
+  
     .step_title {
       width: calc(100% - 20px + 0.8rem);
       margin-block-end: 0 !important;
@@ -326,13 +266,11 @@ export default {
       line-height: 1.8;
     }
   }
-  .form_btns_wrapper {
+
+  .btns_wrapper { 
+    margin-block-start: 4rem;
     @include flex(flex-end, center);
     column-gap: 0.5rem;
-    .text_btn {
-      min-width: unset;
-      font-family: $semi_bold_font;
-    }
   }
 }
 </style>

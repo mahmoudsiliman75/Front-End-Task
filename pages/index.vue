@@ -1,57 +1,33 @@
 <template>
   <section class="wizard_form_content_wrapper">
     <div class="container" v-if="!requestIsCompleted">
-      <h2> LANGUAGE SWITCHER </h2>
+      <LanguageSwitcher />
 
       <!-- ========== Start:: Wizard Form ========== -->
-      <div class="company_forms_wrapper">
-        <div class="row justify-content-between">
-          <!-- Start:: Page Image -->
-          <div class="col-lg-5 d-none d-lg-block">
-            <img
-              class="page_image"
-              src="@/assets/media/images/add_company_bg.svg"
-              width="100"
-              height="200"
-              :alt="$t('TITLES.CompaniesAndCampaignsForms.addCompanyTitle')"
-              loading="lazy"
-            />
-          </div>
-          <!-- End:: Page Image -->
+      <div class="forms_wrapper">
+        <!-- Start:: Forms -->
+        <v-stepper 
+          v-model="currentStep" 
+          class="p-0"
+          flat
+        >
+          <v-stepper-items>
+            <v-stepper-content step="FirstStep">
+              <FirstStep
+                @fireNavigateToSecondStep="handelSecondStepNavigation"
+              />
+            </v-stepper-content>
 
-          <!-- Start:: Forms -->
-          <div class="col-lg-7">
-            <v-stepper 
-              v-model="currentStep" 
-              class="p-0"
-              flat
-            >
-              <v-stepper-items>
-                <v-stepper-content step="FirstStep">
-                  <FirstStep
-                    @fireNavigateToSecondStep="handelSecondStepNavigation"
-                  />
-                </v-stepper-content>
-
-                <v-stepper-content step="contactDetailsStep">
-                  <SecondStep
-                    @fireNavigateToPreviousStep="currentStep = 'FirstStep'"
-                    @fireNavigateToThirdStep="handelThirdStepNavigation"
-                  />
-                </v-stepper-content>
-
-                <v-stepper-content step="ThirdStep">
-                  <ThirdStep  
-                    :isWaitingApiResponse="isWaitingApiResponse"
-                    @fireNavigateToPreviousStep="currentStep = 'contactDetailsStep'"
-                    @submitForm="handelLastStep"
-                  />
-                </v-stepper-content>
-              </v-stepper-items>
-            </v-stepper>
-          </div>
-          <!-- End:: Forms -->
-        </div>
+            <v-stepper-content step="SecondStep">
+              <SecondStep   
+                :isWaitingApiResponse="isWaitingApiResponse"
+                @fireNavigateToPreviousStep="currentStep = 'FirstStep'"
+                @submitForm="handelLastStep"
+              />
+            </v-stepper-content>
+          </v-stepper-items>
+        </v-stepper>
+        <!-- End:: Forms -->
       </div>
       <!-- ========== End:: Wizard Form ========== -->
     </div>
@@ -63,25 +39,25 @@
           src="@/assets/media/images/add_company_request_completed.svg"
           width="220"
           height="220"
-          :alt="$t('TITLES.CompaniesAndCampaignsForms.addCompanyTitle')"
+          :alt="$t('TITLES.WizardForms.requestSent')"
           loading="lazy"
         />
 
-        <h3 class="message_body"> {{ $t("TITLES.CompaniesAndCampaignsForms.requestSent") }} </h3>
+        <h3 class="message_body"> {{ $t("TITLES.WizardForms.requestSent") }} </h3>
 
-        <nuxt-link :to="localePath('/')"> {{ $t("BUTTONS.backToHome") }} </nuxt-link>
+        <button @click="$router.go()"> {{ $t("BUTTONS.ok") }} </button>
       </div>
     </div>
   </section>
 </template>
 
 <script>
+import LanguageSwitcher from '@/components/navigation/LanguageSwitcher.vue';
 import FirstStep from "@/components/steps/FirstStep.vue";
 import SecondStep from "@/components/steps/SecondStep.vue";
-import ThirdStep from "@/components/steps/ThirdStep.vue";
 
 export default {
-  name: "AddCompany",
+  name: "WizardForm",
 
   transition: {
     name: 'fadeInUp',
@@ -90,31 +66,31 @@ export default {
 
   head() {
     return {
-      title: this.$t('TITLES.CompaniesAndCampaignsForms.addCompanyTitle'),
+      title: this.$t('TITLES.WizardForms.register'),
       meta: [
         {
           hid: 'title',
           name: 'title',
-          content: this.$t('TITLES.CompaniesAndCampaignsForms.addCompanyTitle'),
+          content: this.$t('TITLES.WizardForms.register'),
         },
         {
           hid: 'og:title',
           property: 'og:title',
-          content: this.$t('TITLES.CompaniesAndCampaignsForms.addCompanyTitle'),
+          content: this.$t('TITLES.WizardForms.register'),
         },
         {
           hid: 'description',
           name: 'description',
-          content: this.$t('TITLES.CompaniesAndCampaignsForms.desc'),
+          content: this.$t('TITLES.WizardForms.register'),
         },
       ],
     }
   },
 
   components: {
+    LanguageSwitcher,
     FirstStep,
     SecondStep,
-    ThirdStep,
   },
 
   data () {
@@ -129,21 +105,20 @@ export default {
 
       // Start:: Add Company Data
       data: {
-        nameAr: null,
-        nameEn: null,
-        serviceAr: null,
-        serviceEn: null,
-        workField: null,
-        descAr: null,
-        descEn: null,
-        whatsappNumber: null,
+        name: null,
         email: null,
-        website: null,
-        socialLinks: null,
-        addressAr: null,
-        addressEn: null,
-        logo: null,
-        commercialRegister: null,
+        phone: null,
+        natIdImage: null,
+        natIdNumber: null,
+        personalImage: null,
+        password: null,
+        confirmPassword: null,
+        country: null,
+        state: null,
+        otherState: null,
+        city: null,
+        otherCity: null,
+        address: null,
       },
       // End:: Add Company Data
 
@@ -156,71 +131,31 @@ export default {
   methods: {
     // Start:: Handel Steps Navigation
     handelSecondStepNavigation(firstStepData) {
-      this.data.nameAr = firstStepData.nameAr;
-      this.data.nameEn = firstStepData.nameEn;
-      this.data.serviceAr = firstStepData.serviceAr;
-      this.data.serviceEn = firstStepData.serviceEn;
-      this.data.workField = firstStepData.workField;
-      this.data.aboutCompanyAr = firstStepData.aboutCompanyAr;
-      this.data.aboutCompanyEn = firstStepData.aboutCompanyEn;
-      this.currentStep = 'contactDetailsStep';
+      this.data.name = firstStepData.name;
+      this.data.email = firstStepData.email;
+      this.data.phone = firstStepData.phone;
+      this.data.natIdImage = firstStepData.natIdImage;
+      this.data.natIdNumber = firstStepData.natIdNumber;
+      this.data.personalImage = firstStepData.personalImage;
+      this.data.password = firstStepData.password;
+      this.data.confirmPassword = firstStepData.confirmPassword;
+      this.currentStep = 'SecondStep';
     },
-    handelThirdStepNavigation(secondStepData) {
-      this.data.whatsappNumber = secondStepData.phone;
-      this.data.email = secondStepData.email;
-      this.data.website = secondStepData.website;
-      this.data.socialLinks = secondStepData.socialLinks;
-      this.data.addressAr = secondStepData.addressAr;
-      this.data.addressEn = secondStepData.addressEn;
-      this.currentStep = 'ThirdStep';
-    },
-    handelLastStep(thirdStepData) {
-      this.data.logo = thirdStepData.logo;
-      this.data.commercialRegister = thirdStepData.commercialRegister;
-
+    handelLastStep(lastStep) {
+      this.data.country = lastStep.country;
+      this.data.state = lastStep.state;
+      this.data.otherState = lastStep.otherState;
+      this.data.city = lastStep.city;
+      this.data.otherCity = lastStep.otherCity;
+      this.data.address = lastStep.address;
       this.handelStepsSubmit();
     },
     async handelStepsSubmit() {
       this.isWaitingApiResponse = true;
-
-      // Start:: Append Request Data
-      const REQUEST_DATA = new FormData();
-      REQUEST_DATA.append('title[ar]', this.data.nameAr);
-      REQUEST_DATA.append('title[en]', this.data.nameEn);
-      REQUEST_DATA.append('main_service[ar]', this.data.serviceAr);
-      REQUEST_DATA.append('main_service[en]', this.data.serviceEn);
-      REQUEST_DATA.append('category_id', this.data.workField.id);
-      REQUEST_DATA.append('desc[ar]', this.data.descAr);
-      REQUEST_DATA.append('desc[en]', this.data.descEn);
-      REQUEST_DATA.append('phone', this.data.whatsappNumber);
-      REQUEST_DATA.append('email', this.data.email);
-      REQUEST_DATA.append('link', this.data.website);
-      this.data.socialLinks.forEach((item, index) => {
-        REQUEST_DATA.append(`socials[${index}][id]`, item.platform.id);
-        REQUEST_DATA.append(`socials[${index}][link]`, item.link);
-      });
-      REQUEST_DATA.append('location[ar]', this.data.addressAr);
-      REQUEST_DATA.append('location[en]', this.data.addressEn);
-      REQUEST_DATA.append('image', this.data.logo.file);
-      REQUEST_DATA.append('commercial_file', this.data.commercialRegister.file);
-      // Start:: Append Request Data
-
-      try {
-        // ********** Start:: Implement Request ********** //
-        await this.$axiosRequest({
-          method: 'POST',
-          url: 'companies-requests',
-          data: REQUEST_DATA,
-        })
-        // ********** End:: Implement Request ********** //
-        this.isWaitingApiResponse = false;
+      setTimeout(() => {
         this.requestIsCompleted = true;
-      } catch (err) {
         this.isWaitingApiResponse = false;
-        this.$izitoast.error({
-          message: err.response.data.message,
-        });
-      }
+      }, 2000);
     },
     // End:: Handel Steps Navigation
   },
@@ -229,6 +164,7 @@ export default {
 
 <style lang="scss" scoped>
 .wizard_form_content_wrapper {
+  position: relative;
   min-height: 100vh;
   padding-block: $section_block_padding * 1.5 $section_block_padding;
   background: radial-gradient(
@@ -237,25 +173,12 @@ export default {
     var(--theme_second_bg) 100%
   );
 
-  .page_header_wrapper {
-    @include flex(center, center, column);
-    .section_title {
-      @include font($bold_font, 1.8rem);
-      text-transform: capitalize;
-      @include flex(center, center);
-      column-gap: 0.8rem;
-    }
-  
-    .section_desc {
-      margin-block: 1rem 3rem !important;
-      color: var(--gray_theme_clr);
-      font-size: 1.1rem;
-      text-align: center;
-      max-width: 45%;
-    }
+  .language_switcher_wrapper {
+    position: absolute;
+    top: 5%;
   }
 
-  .company_forms_wrapper {
+  .forms_wrapper {
     padding: 1rem;
     background-color: var(--theme_main_bg);
     border-radius: 8px;
@@ -284,7 +207,7 @@ export default {
       @include font($semi_bold_font, 1.2rem, var(--white));
     }
 
-    a {
+    button {
       @include primaryBtnStyle;
       background-image: linear-gradient(90deg, transparent 50%, var(--white) 50%);
       color: var(--main_theme_clr);
